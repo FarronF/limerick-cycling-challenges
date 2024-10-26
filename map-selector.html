@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Location</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDizIh8ggfuOfRPpQrMyVclTjqAa5aoGgo"></script>
+    <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 52.65396, lng: -8.6157554},
+                zoom: 14
+            });
+            var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                map: map,
+                draggable: true
+            });
+
+            marker.addListener('dragend', function() {
+                var lat = marker.getPosition().lat();
+                var lng = marker.getPosition().lng();
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+            });
+        }
+        function submitForm() {
+            var lat = document.getElementById('latitude').value;
+            var lng = document.getElementById('longitude').value;
+            var formUrl = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?usp=pp_url&entry.LATITUDE_FIELD_ID=" + lat + "&entry.LONGITUDE_FIELD_ID=" + lng;
+            window.open(formUrl, '_blank');
+        }
+    </script>
+</head>
+<body onload="initMap()">
+    <h3>Select Your Location</h3>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+    <input type="hidden" id="latitude">
+    <input type="hidden" id="longitude">
+    <button onclick="submitForm()">Submit Location</button>
+</body>
+</html>
