@@ -18,18 +18,19 @@
                         featureType: "poi",
                         elementType: "labels",
                         stylers: [{ visibility: "off" }]
-                    },
-                    {
-                        featureType: "landscape",
-                        elementType: "labels",
-                        stylers: [{ visibility: "off" }]
                     }
                 ]
             });
 
             // Add a click listener to place a marker
             map.addListener("click", (event) => {
-                setMarker(event.latLng);
+                if (event.placeId) {
+                    // Prevent the click on region names and POIs
+                    event.stop();
+                } else {
+                    // If no placeId, proceed with setting the marker
+                    setMarker(event.latLng);
+                }
             });
         }
 
