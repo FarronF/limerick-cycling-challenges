@@ -53,9 +53,22 @@
             window.open(formUrl, "_blank"); // Opens the form in a new tab
         }
     </script>
+    <style>
+        button {
+          background-color: #04AA6D; /* Green */
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+        }
+    </style>
 </head>
 <body onload="initMap()">
-    <h3>Select Where the issue is on the map</h3>
+    <h2>Limerick Cycling Challenges Submission</h2>
+    <h4>To begin please select where the issue is on the map. You will then be redirected to a form to fill in more details.</h4>
     <div id="map" style="height: 800px; width: 100%;"></div>
     <input type="hidden" id="latitude">
     <input type="hidden" id="longitude">
