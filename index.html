@@ -24,13 +24,7 @@
 
             // Add a click listener to place a marker
             map.addListener("click", (event) => {
-                if (event.placeId) {
-                    // Prevent the click on region names and POIs
-                    event.stop();
-                } else {
-                    // If no placeId, proceed with setting the marker
-                    setMarker(event.latLng);
-                }
+                setMarker(event.latLng);
             });
         }
 
