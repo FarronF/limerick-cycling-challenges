@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Select Location</title>
+    <title>Select Location on Map</title>
+    <!-- Load the Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDizIh8ggfuOfRPpQrMyVclTjqAa5aoGgo"></script>
     <script>
+        let map;
+        let marker;
+
+        // Initialize the map
         function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 52.65396, lng: -8.6157554},
-                zoom: 14
-            });
-            var marker = new google.maps.Marker({
-                position: map.getCenter(),
-                map: map,
-                draggable: true
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 37.7749, lng: -122.4194 }, // Default to San Francisco
+                zoom: 10,
             });
 
-            marker.addListener('dragend', function() {
-                var lat = marker.getPosition().lat();
-                var lng = marker.getPosition().lng();
-                document.getElementById('latitude').value = lat;
-                document.getElementById('longitude').value = lng;
+            // Add a click listener to place a marker
+            map.addListener("click", (event) => {
+                setMarker(event.latLng);
             });
         }
+
+        // Function to set a marker on the clicked location
+        function setMarker(location) {
+            // If marker exists, move it; otherwise, create a new marker
+            if (marker) {
+                marker.setPosition(location);
+            } else {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                });
+            }
+
+            // Set latitude and longitude in the hidden fields
+            document.getElementById("latitude").value = location.lat();
+            document.getElementById("longitude").value = location.lng();
+        }
+
+        // Function to submit the coordinates via a Google Form
         function submitForm() {
-            var lat = document.getElementById('latitude').value;
-            var lng = document.getElementById('longitude').value;
-            var formUrl = "https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=" + lat + ", " + lng;
-            window.open(formUrl, '_blank');
+            const lat = document.getElementById("latitude").value;
+            const lng = document.getElementById("longitude").value;
+            const formUrl = `https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?usp=pp_url&entry.LATITUDE_FIELD_ID=${lat}&entry.LONGITUDE_FIELD_ID=${lng}`;
+            window.open(formUrl, "_blank"); // Opens the form in a new tab
         }
     </script>
 </head>
 <body onload="initMap()">
-    <h3>Select your location by dragging the pin</h3>
-    <div id="map" style="height: 800px; width: 100%;"></div>
+    <h3>Select Your Location on the Map</h3>
+    <div id="map" style="height: 500px; width: 100%;"></div>
     <input type="hidden" id="latitude">
     <input type="hidden" id="longitude">
     <button onclick="submitForm()">Submit Location</button>
