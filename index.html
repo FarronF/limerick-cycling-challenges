@@ -10,9 +10,9 @@
 
         // Initialize the map
         function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 37.7749, lng: -122.4194 }, // Default to San Francisco
-                zoom: 10,
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 52.65396, lng: -8.6157554},
+                zoom: 14
             });
 
             // Add a click listener to place a marker
@@ -42,14 +42,14 @@
         function submitForm() {
             const lat = document.getElementById("latitude").value;
             const lng = document.getElementById("longitude").value;
-            const formUrl = `https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?usp=pp_url&entry.LATITUDE_FIELD_ID=${lat}&entry.LONGITUDE_FIELD_ID=${lng}`;
+            var formUrl = "https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=" + lat + ", " + lng;
             window.open(formUrl, "_blank"); // Opens the form in a new tab
         }
     </script>
 </head>
 <body onload="initMap()">
-    <h3>Select Your Location on the Map</h3>
-    <div id="map" style="height: 500px; width: 100%;"></div>
+    <h3>Select Where the issue is on the map</h3>
+    <div id="map" style="height: 800px; width: 100%;"></div>
     <input type="hidden" id="latitude">
     <input type="hidden" id="longitude">
     <button onclick="submitForm()">Submit Location</button>
