@@ -49,7 +49,14 @@
         function submitForm() {
             const lat = document.getElementById("latitude").value;
             const lng = document.getElementById("longitude").value;
-            var formUrl = "https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=" + lat + ", " + lng;
+
+            // Check if a location has been selected
+            if (!lat || !lng) {
+                alert("Please select a location on the map before submitting.");
+                return;
+            }
+
+            const formUrl = `https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?usp=pp_url&entry.LATITUDE_FIELD_ID=${lat}&entry.LONGITUDE_FIELD_ID=${lng}`;
             window.open(formUrl, "_blank"); // Opens the form in a new tab
         }
     </script>
