@@ -1,119 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Select Location on Map</title>
-    <!-- Load the Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDizIh8ggfuOfRPpQrMyVclTjqAa5aoGgo"></script>
-    <script>
-        let map;
-        let marker;
-
-        // Boundary values for the latitude and longitude
-        const LAT_MIN = 52.604317397573304;
-        const LAT_MAX = 52.72653912231432;
-        const LNG_MIN = -8.71377404624023;
-        const LNG_MAX = -8.49404748374023;
-
-        // Define the allowed bounds as a LatLngBounds object
-        const allowedBounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(LAT_MIN, LNG_MIN),
-            new google.maps.LatLng(LAT_MAX, LNG_MAX)
-        );
-
-        // Initialize the map
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 52.65396, lng: -8.6157554 },
-                zoom: 14,
-                maxZoom: 14,  // Set max zoom level
-                restriction: {
-                    latLngBounds: allowedBounds,
-                    strictBounds: true  // Prevents moving outside bounds
-                },
-                styles: [
-                    {
-                        featureType: "poi",
-                        elementType: "labels",
-                        stylers: [{ visibility: "off" }]
-                    }
-                ]
-            });
-
-            // Add a click listener to place a marker
-            map.addListener("click", (event) => {
-                setMarker(event.latLng);
-            });
-        }
-
-        // Function to set a marker on the clicked location
-        function setMarker(location) {
-            // If marker exists, move it; otherwise, create a new marker
-            if (marker) {
-                marker.setPosition(location);
-            } else {
-                marker = new google.maps.Marker({
-                    position: location,
-                    map: map,
-                });
-            }
-
-            // Set latitude and longitude in the hidden fields
-            document.getElementById("latitude").value = location.lat();
-            document.getElementById("longitude").value = location.lng();
-        }
-
-        // Function to validate the coordinates
-        function validateCoordinates(lat, lng) {
-            return (
-                lat >= LAT_MIN &&
-                lat <= LAT_MAX &&
-                lng >= LNG_MIN &&
-                lng <= LNG_MAX
-            );
-        }
-
-        // Function to submit the coordinates via a Google Form
-        function submitForm() {
-            const lat = parseFloat(document.getElementById("latitude").value);
-            const lng = parseFloat(document.getElementById("longitude").value);
-
-            // Check if a location has been selected
-            if (isNaN(lat) || isNaN(lng)) {
-                alert("Please select a location on the map before submitting.");
-                return;
-            }
-
-            // Validate if the selected location is within the allowed boundaries
-            if (!validateCoordinates(lat, lng)) {
-                alert("The selected location is outside the allowed area. Please select a valid location within Limerick.");
-                return;
-            }
-
-            const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=${lat}, ${lng}`;
-            
-            // Display feedback and form iframe
-            document.getElementById("feedback").style.display = "block";
-            document.getElementById("formFrame").src = formUrl;
-            document.getElementById("formFrame").style.display = "block";
-        }
-    </script>
+    <title>Submit Location</title>
     <style>
-        button {
-            background-color: #04AA6D; /* Green */
+        /* Make the iframe visually seamless */
+        #formFrame {
+            display: none;
+            width: 100%;
+            height: 90vh; /* Adjust as needed for form length */
             border: none;
+            margin-top: 20px;
+        }
+
+        /* Style the submit button */
+        button {
+            background-color: #04AA6D;
             color: white;
             padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
+            border: none;
             font-size: 16px;
-            margin-top: 16px;
             cursor: pointer;
-        }
-
-        #map {
-            height: 75vh;
-            width: 100%;
         }
 
         /* Loading message or feedback text */
@@ -124,13 +30,34 @@
             margin-top: 20px;
         }
     </style>
+    <script>
+        function submitForm() {
+            const lat = document.getElementById("latitude").value;
+            const lng = document.getElementById("longitude").value;
+
+            // Check coordinates bounds
+            const latInBounds = lat >= 52.604317397573304 && lat <= 52.72653912231432;
+            const lngInBounds = lng >= -8.71377404624023 && lng <= -8.49404748374023;
+
+            if (!latInBounds || !lngInBounds) {
+                alert("The selected location is outside the allowed area.");
+                return;
+            }
+
+            const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=${lat},${lng}`;
+
+            // Display feedback and form iframe
+            document.getElementById("feedback").style.display = "block";
+            document.getElementById("formFrame").src = formUrl;
+            document.getElementById("formFrame").style.display = "block";
+        }
+    </script>
 </head>
-<body onload="initMap()">
-    <h2>Limerick Cycling Challenges Submission</h2>
-    <h4>To begin please select where the issue is on the map. Zoom in and be as precise as possible. When you are ready click the Submit Location button below, you will then be redirected to a form to fill in more details.</h4>
-    <div id="map"></div>
-    <input type="hidden" id="latitude">
-    <input type="hidden" id="longitude">
+<body>
+    <h2>Location Submission</h2>
+    <p>Select a location on the map. When ready, submit the location, and the Google Form will load below.</p>
+    <input type="hidden" id="latitude" value="52.65396">
+    <input type="hidden" id="longitude" value="-8.6157554">
     <button onclick="submitForm()">Submit Location</button>
 
     <!-- Feedback message to guide users -->
@@ -138,6 +65,5 @@
 
     <!-- Embedded Google Form -->
     <iframe id="formFrame"></iframe>
-    
 </body>
 </html>
