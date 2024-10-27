@@ -14,11 +14,22 @@
         const LNG_MIN = -8.71377404624023;
         const LNG_MAX = -8.49404748374023;
 
+        // Define the allowed bounds as a LatLngBounds object
+        const allowedBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(LAT_MIN, LNG_MIN),
+            new google.maps.LatLng(LAT_MAX, LNG_MAX)
+        );
+
         // Initialize the map
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 52.65396, lng: -8.6157554 },
                 zoom: 14,
+                maxZoom: 14,  // Set max zoom level
+                restriction: {
+                    latLngBounds: allowedBounds,
+                    strictBounds: true  // Prevents moving outside bounds
+                },
                 styles: [
                     {
                         featureType: "poi",
