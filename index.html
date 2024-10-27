@@ -90,7 +90,11 @@
             }
 
             const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=${lat}, ${lng}`;
-            window.open(formUrl, "_blank"); // Opens the form in a new tab
+            
+            // Display feedback and form iframe
+            document.getElementById("feedback").style.display = "block";
+            document.getElementById("formFrame").src = formUrl;
+            document.getElementById("formFrame").style.display = "block";
         }
     </script>
     <style>
@@ -111,6 +115,14 @@
             height: 75vh;
             width: 100%;
         }
+
+        /* Loading message or feedback text */
+        #feedback {
+            display: none;
+            font-size: 16px;
+            color: #333;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body onload="initMap()">
@@ -120,5 +132,12 @@
     <input type="hidden" id="latitude">
     <input type="hidden" id="longitude">
     <button onclick="submitForm()">Submit Location</button>
+
+    <!-- Feedback message to guide users -->
+    <div id="feedback">Loading form, please wait...</div>
+
+    <!-- Embedded Google Form -->
+    <iframe id="formFrame"></iframe>
+    
 </body>
 </html>
