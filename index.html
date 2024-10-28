@@ -1,69 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Submit Location</title>
+    <title>Embed Google Form with Hidden Fields</title>
     <style>
-        /* Make the iframe visually seamless */
+        /* Make sure iframe takes up available width and height */
         #formFrame {
-            display: none;
             width: 100%;
-            height: 90vh; /* Adjust as needed for form length */
+            height: 80vh;
             border: none;
-            margin-top: 20px;
+            display: none; /* Initially hide the iframe */
         }
-
-        /* Style the submit button */
-        button {
-            background-color: #04AA6D;
-            color: white;
-            padding: 15px 32px;
-            border: none;
+        #loadButton {
+            padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
         }
-
-        /* Loading message or feedback text */
-        #feedback {
-            display: none;
-            font-size: 16px;
-            color: #333;
-            margin-top: 20px;
-        }
     </style>
     <script>
-        function submitForm() {
-            const lat = document.getElementById("latitude").value;
-            const lng = document.getElementById("longitude").value;
+        function loadIframe() {
+            const iframe = document.createElement("iframe");
+			iframe.onload = hideFormFields; // Call hideFormFields when the iframe has loaded
+            iframe.id = "formFrame";
+            iframe.src = "https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=52.65396,-8.6157554";
+            document.getElementById("iframeContainer").appendChild(iframe);
+            iframe.style.display = "block"; // Show the iframe after it's added
+        }
 
-            // Check coordinates bounds
-            const latInBounds = lat >= 52.604317397573304 && lat <= 52.72653912231432;
-            const lngInBounds = lng >= -8.71377404624023 && lng <= -8.49404748374023;
-
-            if (!latInBounds || !lngInBounds) {
-                alert("The selected location is outside the allowed area.");
-                return;
-            }
-
-            const formUrl = `https://docs.google.com/forms/d/e/1FAIpQLScWiQ4Pva8rDKxDghmIAZIYCuRqwUuhEPKX8CZ4u9FiwNF_yA/viewform?usp=sf_link&entry.1790994089=${lat},${lng}`;
-
-            // Display feedback and form iframe
-            document.getElementById("feedback").style.display = "block";
-            document.getElementById("formFrame").src = formUrl;
-            document.getElementById("formFrame").style.display = "block";
+        function hideFormFields() {
+			
+            const iframe = document.getElementById("formFrame");
+            // const formDocument = iframe.contentDocument || iframe.contentWindow.document;
+			const contentWindow = iframe.contentWindow;
+			debugger;
+            // Get all input elements with data-initial-value
+            const inputs = iframe.contentWindow.body.querySelectorAll('input[data-initial-value]');
+			debugger;
+            inputs.forEach(input => {
+                // Check if data-initial-value is not an empty string
+                if (input.getAttribute('data-initial-value') !== "") {
+                    // Find the closest ancestor with role="listitem" and hide it
+                    const listItem = input.closest('[role="listitem"]');
+                    if (listItem) {
+                        listItem.style.display = "none"; // Hide the entire list item
+                    }
+                }
+            });
         }
     </script>
 </head>
 <body>
-    <h2>Location Submission</h2>
-    <p>Select a location on the map. When ready, submit the location, and the Google Form will load below.</p>
-    <input type="hidden" id="latitude" value="52.65396">
-    <input type="hidden" id="longitude" value="-8.6157554">
-    <button onclick="submitForm()">Submit Location</button>
+    <h2>Submit Your Cycling Challenge</h2>
+    <p>Select the location and upload an image if applicable, then complete additional details below.</p>
 
-    <!-- Feedback message to guide users -->
-    <div id="feedback">Loading form, please wait...</div>
-
-    <!-- Embedded Google Form -->
-    <iframe id="formFrame"></iframe>
+    <button id="loadButton" onclick="loadIframe()">Load Google Form</button>
+    <div id="iframeContainer"></div> <!-- Container for the iframe -->
 </body>
 </html>
