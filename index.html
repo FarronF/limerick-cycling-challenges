@@ -25,7 +25,7 @@
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 52.65396, lng: -8.6157554 },
                 zoom: 14,
-                maxZoom: 14,  // Set max zoom level
+                minZoom: 14,
                 restriction: {
                     latLngBounds: allowedBounds,
                     strictBounds: true  // Prevents moving outside bounds
